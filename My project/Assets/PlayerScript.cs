@@ -36,6 +36,10 @@ public class PlayerScript : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+        if (transform.position.y < -30)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
         if (MaxHealth < Health)
         {
             Health = MaxHealth;
