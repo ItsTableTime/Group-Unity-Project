@@ -11,14 +11,20 @@ public class EnemyMoveScript : MonoBehaviour
     public float AggressiveRange = 0;
     public float EnemySight;
     public GameObject Player;
+    public float EnemyHealth;
+    Rigidbody2D EnemyRigidBody;
 
     void Start()
     {
-
+        EnemyRigidbody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
+        if (EnemyHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
         transform.position = transform.position + new Vector3(Facing * EnemySpeed * Time.deltaTime, 0, 0);
         TurnCooldown -= 1 * Time.deltaTime;
         EnemySight = Vector2.Distance(transform.position, Player.transform.position);
@@ -69,6 +75,23 @@ public class EnemyMoveScript : MonoBehaviour
                     TurnCooldown = 1;
                 }
             }
+
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "BasicAttack")
+        {
+            EnemyHealth -= 20;
+            transform.position = transform.position + new Vector3(-Facing, 0, 0);
+            Destroy(other.gameObject);
+
+        }
+        if (other.tag == "SpikeAttack")
+        {
+            EnemyHealth -= 40;
+            EnemyRigidBody.AddForce(transform.up * 5, ForceMode2D.Impulse);
+            Destroy(other.gameObject);
 
         }
     }

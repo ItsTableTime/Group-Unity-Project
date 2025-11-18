@@ -8,6 +8,9 @@ TagManager:
   - DamagePart
   - Wall
   - Enemy
+  - BasicAttack
+  - SpikeAttack
+  - StrongAttack
   layers:
   - Default
   - TransparentFX

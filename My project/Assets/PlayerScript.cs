@@ -7,20 +7,38 @@ using UnityEngine.Windows;
 public class PlayerScript : MonoBehaviour
 {
     float HorizontalMovement;
-    float VerticalMovement;
     Rigidbody2D PlayerRigidbody;
     bool AllowJump = true;
-    bool AllowDash = true;
-    float DashTime;
-    public float DashLength;
-    public float DashSpeed;
-    public float DashCooldown;
+    public PlayerInput input;
     public float Speed;
     public float JumpHeight;
     public float Health;
     public float MaxHealth;
     public float Immunity;
-    public PlayerInput input;
+    public float PlayerDirection;
+    public GameObject AttackProjectile;
+    public GameObject SummonedAttack;
+    public string SpellSlot1;
+    public string SpellSlot2;
+    public string SpellSlot3;
+    public float GlobalCooldown;
+    Vector2 PlayerTransform;
+
+    public float DashLength;
+    public float DashSpeed;
+    public float DashCooldown;
+    float DashTime;
+
+    bool AllowBonusJump;
+    public float BonusJumpHeight;
+
+    public float WarpLength;
+    public float WarpCooldown;
+    float WarpAmount;
+
+    public GameObject SpikeAttackProjectile;
+    public GameObject SummonedSpikeAttack;
+    public float SpikeCooldown;
     void Start()
     {
         PlayerRigidbody = GetComponent<Rigidbody2D>();
@@ -28,6 +46,7 @@ public class PlayerScript : MonoBehaviour
     }
     void Update()
     {
+        PlayerTransform = transform.position;
         Vector2 temp = PlayerRigidbody.linearVelocity;
         temp.x = (HorizontalMovement * Speed * (1+DashSpeed*DashTime));
         PlayerRigidbody.linearVelocity = (temp.x * transform.right) + (temp.y * transform.up);
@@ -53,6 +72,18 @@ public class PlayerScript : MonoBehaviour
             DashTime = 0;
             DashCooldown -= 1 * Time.deltaTime;
         }
+        if (GlobalCooldown > 0)
+        {
+            GlobalCooldown -= 1 * Time.deltaTime;
+        }
+        if (WarpCooldown > 0)
+        {
+            WarpCooldown -= 1 * Time.deltaTime;
+        }
+        if (SpikeCooldown > 0)
+        {
+            SpikeCooldown -= 1 * Time.deltaTime;
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -60,22 +91,62 @@ public class PlayerScript : MonoBehaviour
         Vector2 InputAxis = context.ReadValue<Vector2>();
 
         HorizontalMovement = InputAxis.x;
-        VerticalMovement = InputAxis.y;
+        if (InputAxis.x != 0)
+        {
+            PlayerDirection = InputAxis.x;
+            WarpAmount = InputAxis.x * WarpLength;
+        }
     }
     public void Jump()
     {
-        if (AllowJump == true)
+        if ((AllowJump == true) & (GlobalCooldown <= 0))
         {
             PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
             AllowJump = false;
+            GlobalCooldown = 0.25f;
         }
-    }    public void Dash()
+    }
+    public void Attack()
     {
-        if ((AllowDash == true) & (DashCooldown <= 0))
+        if (GlobalCooldown <= 0)
+        {
+            SummonedAttack = Instantiate(AttackProjectile, transform.position, transform.rotation);
+            SummonedAttack.GetComponent<AttackMovementScript>().AttackDirection = PlayerDirection;
+            GlobalCooldown = 0.25f;
+
+        }
+
+    }
+    public void Spell1()
+    {
+        if ((SpikeCooldown <= 0) &(SpellSlot1 == "EarthSpike") & (GlobalCooldown <= 0))
+        {
+            SummonedSpikeAttack = Instantiate(SpikeAttackProjectile, (transform.position + new Vector3(PlayerDirection, -1.5f)), transform.rotation);
+            GlobalCooldown = 1;
+            SpikeCooldown = 3;
+
+        }
+
+    }
+    public void Spell2()
+    {
+        if ((DashCooldown <= 0) & (SpellSlot2 == "Dash") & (GlobalCooldown <= 0))
         {
             DashTime = DashLength;
-            DashCooldown = 3;
-            AllowDash = false;
+            DashCooldown = 5;
+            GlobalCooldown = 0.25f;
+        }
+        if ((AllowBonusJump == true) & (SpellSlot2 == "BonusJump") & (GlobalCooldown <= 0))
+        {
+            PlayerRigidbody.AddForce(transform.up * BonusJumpHeight, ForceMode2D.Impulse);
+            AllowBonusJump = false;
+            GlobalCooldown = 0.25f;
+        }
+        if ((WarpCooldown <= 0) & (SpellSlot2 == "WarpDash") & (GlobalCooldown <= 0))
+        {
+            transform.position = PlayerTransform + new Vector2(WarpAmount, 0);
+            WarpCooldown = 5;
+            GlobalCooldown = 0.25f;
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -83,12 +154,12 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             AllowJump = true;
-            AllowDash = true;
+            AllowBonusJump = true;
         }
         if (collision.gameObject.tag == "Wall")
         {
             AllowJump = true;
-            AllowDash = true;
+            AllowBonusJump = true;
         }
         if (collision.gameObject.tag == "DamagePart")
         {
