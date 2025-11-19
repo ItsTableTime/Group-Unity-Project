@@ -13,16 +13,18 @@ public class EnemyMoveScript : MonoBehaviour
     public GameObject Player;
     public float EnemyHealth;
     Rigidbody2D EnemyRigidBody;
+    public GateScript LinkedGate;
 
     void Start()
     {
-        EnemyRigidbody = GetComponent<Rigidbody2D>();
+        EnemyRigidBody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
         if (EnemyHealth <= 0)
         {
+            LinkedGate.EnemyCount--;
             Destroy(gameObject);
         }
         transform.position = transform.position + new Vector3(Facing * EnemySpeed * Time.deltaTime, 0, 0);
@@ -83,16 +85,14 @@ public class EnemyMoveScript : MonoBehaviour
         if (other.tag == "BasicAttack")
         {
             EnemyHealth -= 20;
-            transform.position = transform.position + new Vector3(-Facing, 0, 0);
+            transform.position = transform.position + new Vector3(-0.5f*Facing, 0, 0);
             Destroy(other.gameObject);
 
         }
         if (other.tag == "SpikeAttack")
         {
             EnemyHealth -= 40;
-            EnemyRigidBody.AddForce(transform.up * 5, ForceMode2D.Impulse);
-            Destroy(other.gameObject);
-
+            EnemyRigidBody.AddForce(transform.up * 500, ForceMode2D.Impulse);
         }
     }
 }

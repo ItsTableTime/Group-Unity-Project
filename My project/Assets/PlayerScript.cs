@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements.Experimental;
 using UnityEngine.Windows;
 
 public class PlayerScript : MonoBehaviour
@@ -17,12 +18,18 @@ public class PlayerScript : MonoBehaviour
     public float Immunity;
     public float PlayerDirection;
     public GameObject AttackProjectile;
-    public GameObject SummonedAttack;
+    GameObject SummonedAttack;
+    public GameObject ItemDrop;
     public string SpellSlot1;
     public string SpellSlot2;
     public string SpellSlot3;
     public float GlobalCooldown;
     Vector2 PlayerTransform;
+    bool CanPickup = false;
+    float PickupCooldown = 0;
+    CollectableScript CollectableInfo;
+    GameObject CollectableObject;
+    GameObject SummonedCollectable;
 
     public float DashLength;
     public float DashSpeed;
@@ -37,7 +44,7 @@ public class PlayerScript : MonoBehaviour
     float WarpAmount;
 
     public GameObject SpikeAttackProjectile;
-    public GameObject SummonedSpikeAttack;
+    GameObject SummonedSpikeAttack;
     public float SpikeCooldown;
     void Start()
     {
@@ -75,6 +82,10 @@ public class PlayerScript : MonoBehaviour
         if (GlobalCooldown > 0)
         {
             GlobalCooldown -= 1 * Time.deltaTime;
+        }
+        if (PickupCooldown > 0)
+        {
+            PickupCooldown -= 1 * Time.deltaTime;
         }
         if (WarpCooldown > 0)
         {
@@ -117,11 +128,52 @@ public class PlayerScript : MonoBehaviour
         }
 
     }
+    public void Pickup()
+    {
+        if ((CanPickup == true) & (PickupCooldown <= 0))
+        {
+            PickupCooldown = 0.25f;
+            if (CollectableInfo.SpellSlot == 1)
+            {
+                if (SpellSlot1 != "Empty")
+                {
+                    SummonedCollectable = Instantiate(ItemDrop, transform.position, transform.rotation);
+                    SummonedCollectable.GetComponent<CollectableScript>().SpellSlot = 1;
+                    SummonedCollectable.GetComponent<CollectableScript>().SpellName = SpellSlot1;
+                }
+                SpellSlot1 = CollectableInfo.SpellName;
+                Destroy(CollectableObject);
+            }
+            if (CollectableInfo.SpellSlot == 2)
+            {
+                if (SpellSlot2 != "Empty")
+                {
+                    SummonedCollectable = Instantiate(ItemDrop, transform.position, transform.rotation);
+                    SummonedCollectable.GetComponent<CollectableScript>().SpellSlot = 2;
+                    SummonedCollectable.GetComponent<CollectableScript>().SpellName = SpellSlot2;
+                }
+                SpellSlot2 = CollectableInfo.SpellName;
+                Destroy(CollectableObject);
+            }
+            if (CollectableInfo.SpellSlot == 3)
+            {
+                if (SpellSlot3 != "Empty")
+                {
+                    SummonedCollectable = Instantiate(ItemDrop, transform.position, transform.rotation);
+                    SummonedCollectable.GetComponent<CollectableScript>().SpellSlot = 3;
+                    SummonedCollectable.GetComponent<CollectableScript>().SpellName = SpellSlot3;
+                }
+                SpellSlot3 = CollectableInfo.SpellName;
+                Destroy(CollectableObject);
+            }
+            
+        }
+    }
     public void Spell1()
     {
         if ((SpikeCooldown <= 0) &(SpellSlot1 == "EarthSpike") & (GlobalCooldown <= 0))
         {
-            SummonedSpikeAttack = Instantiate(SpikeAttackProjectile, (transform.position + new Vector3(PlayerDirection, -1.5f)), transform.rotation);
+            SummonedSpikeAttack = Instantiate(SpikeAttackProjectile, (transform.position + new Vector3(1.5f*PlayerDirection, -1.5f)), transform.rotation);
             GlobalCooldown = 1;
             SpikeCooldown = 3;
 
@@ -182,5 +234,19 @@ public class PlayerScript : MonoBehaviour
             }
         }
 
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Collectable")
+        {
+                CanPickup = true;
+                CollectableInfo = other.gameObject.GetComponent<CollectableScript>();
+                CollectableObject = other.gameObject;
+
+        }
+    }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+            CanPickup = false;
     }
 }

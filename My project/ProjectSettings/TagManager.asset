@@ -10,7 +10,7 @@ TagManager:
   - Enemy
   - BasicAttack
   - SpikeAttack
-  - StrongAttack
+  - Collectable
   layers:
   - Default
   - TransparentFX

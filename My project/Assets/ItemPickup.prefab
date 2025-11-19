@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7446931105060371766}
   - component: {fileID: 2578177439319696025}
-  - component: {fileID: -1100555018216067940}
-  - component: {fileID: -1529380729765044745}
+  - component: {fileID: 5760902650674321895}
+  - component: {fileID: 5751049208008701838}
   m_Layer: 0
-  m_Name: SpikeAttackObject
-  m_TagString: SpikeAttack
+  m_Name: ItemPickup
+  m_TagString: Collectable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,9 +27,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790614420368437672}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.43842, y: -3.8208, z: 0}
-  m_LocalScale: {x: 1.5, y: 3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 2912297781628502651, guid: a87478f101e07fe4387116930445ae0d, type: 3}
-  m_Color: {r: 0.98796713, g: 1, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &-1100555018216067940
+--- !u!61 &5760902650674321895
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,9 +133,9 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 3, y: 3}
   m_EdgeRadius: 0
---- !u!114 &-1529380729765044745
+--- !u!114 &5751049208008701838
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,8 +144,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 790614420368437672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 098a8169c3a290246acb93685e257edf, type: 3}
+  m_Script: {fileID: 11500000, guid: 9812e197cf33cb84b920b809c62dae00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 10
-  Lifespan: 0.25
+  SpellName: GroundSpike
+  SpellSlot: 1
