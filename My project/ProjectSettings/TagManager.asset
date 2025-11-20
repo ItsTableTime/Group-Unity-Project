@@ -11,6 +11,7 @@ TagManager:
   - BasicAttack
   - SpikeAttack
   - Collectable
+  - Ceiling
   layers:
   - Default
   - TransparentFX

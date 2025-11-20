@@ -208,11 +208,6 @@ public class PlayerScript : MonoBehaviour
             AllowJump = true;
             AllowBonusJump = true;
         }
-        if (collision.gameObject.tag == "Wall")
-        {
-            AllowJump = true;
-            AllowBonusJump = true;
-        }
         if (collision.gameObject.tag == "DamagePart")
         {
             if (Immunity <= 0)
@@ -220,7 +215,6 @@ public class PlayerScript : MonoBehaviour
                 Health -= 1;
                 PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
                 Immunity = 1;
-
             }
         }
         if (collision.gameObject.tag == "Enemy")
