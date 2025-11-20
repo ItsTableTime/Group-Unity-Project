@@ -114,7 +114,7 @@ public class PlayerScript : MonoBehaviour
         {
             PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
             AllowJump = false;
-            GlobalCooldown = 0.25f;
+            GlobalCooldown = 0.2f;
         }
     }
     public void Attack()
@@ -123,7 +123,7 @@ public class PlayerScript : MonoBehaviour
         {
             SummonedAttack = Instantiate(AttackProjectile, transform.position, transform.rotation);
             SummonedAttack.GetComponent<AttackMovementScript>().AttackDirection = PlayerDirection;
-            GlobalCooldown = 0.25f;
+            GlobalCooldown = 0.2f;
 
         }
 
@@ -132,7 +132,7 @@ public class PlayerScript : MonoBehaviour
     {
         if ((CanPickup == true) & (PickupCooldown <= 0))
         {
-            PickupCooldown = 0.25f;
+            PickupCooldown = 0.2f;
             if (CollectableInfo.SpellSlot == 1)
             {
                 if (SpellSlot1 != "Empty")
@@ -174,7 +174,7 @@ public class PlayerScript : MonoBehaviour
         if ((SpikeCooldown <= 0) &(SpellSlot1 == "EarthSpike") & (GlobalCooldown <= 0))
         {
             SummonedSpikeAttack = Instantiate(SpikeAttackProjectile, (transform.position + new Vector3(1.5f*PlayerDirection, -1.5f)), transform.rotation);
-            GlobalCooldown = 1;
+            GlobalCooldown = 0.5f;
             SpikeCooldown = 3;
 
         }
@@ -186,19 +186,19 @@ public class PlayerScript : MonoBehaviour
         {
             DashTime = DashLength;
             DashCooldown = 5;
-            GlobalCooldown = 0.25f;
+            GlobalCooldown = 0.2f;
         }
         if ((AllowBonusJump == true) & (SpellSlot2 == "BonusJump") & (GlobalCooldown <= 0))
         {
             PlayerRigidbody.AddForce(transform.up * BonusJumpHeight, ForceMode2D.Impulse);
             AllowBonusJump = false;
-            GlobalCooldown = 0.25f;
+            GlobalCooldown = 0.2f;
         }
         if ((WarpCooldown <= 0) & (SpellSlot2 == "WarpDash") & (GlobalCooldown <= 0))
         {
             transform.position = PlayerTransform + new Vector2(WarpAmount, 0);
             WarpCooldown = 5;
-            GlobalCooldown = 0.25f;
+            GlobalCooldown = 0.2f;
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
