@@ -183,3 +183,5 @@ MonoBehaviour:
   EnemySight: 0
   Player: {fileID: 0}
   EnemyHealth: 100
+  KnockbackResistance: 1
+  LinkedGate: {fileID: 0}

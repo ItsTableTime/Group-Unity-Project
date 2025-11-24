@@ -8197,9 +8197,9 @@ MonoBehaviour:
   PlayerDirection: 1
   AttackProjectile: {fileID: 790614420368437672, guid: e52a9c2ed33244a43820e385e00a9203, type: 3}
   ItemDrop: {fileID: 790614420368437672, guid: c220c4023df106146b99e0a2980af7b7, type: 3}
-  SpellSlot1: Empty
+  SpellSlot1: WaterGun
   SpellSlot2: Empty
-  SpellSlot3: Empty
+  SpellSlot3: RockSlam
   GlobalCooldown: 0
   DashLength: 1.25
   DashSpeed: 3
@@ -8209,6 +8209,10 @@ MonoBehaviour:
   WarpCooldown: 0
   SpikeAttackProjectile: {fileID: 790614420368437672, guid: 5362226ac156db9409c7c184ce82daf3, type: 3}
   SpikeCooldown: 0
+  WaterGunAttackProjectile: {fileID: 790614420368437672, guid: a1a00a471322b714ca339a4dd1aedea9, type: 3}
+  WaterGunCooldown: 0
+  SlamAttackProjectile: {fileID: 790614420368437672, guid: fbc9064dc644b4b4da9136910491af17, type: 3}
+  SlamCooldown: 0
 --- !u!114 &521668667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8319,7 +8323,19 @@ MonoBehaviour:
     m_ActionId: f1ba0d36-48eb-4cd5-b651-1c94a6531f70
     m_ActionName: 'Player/Jump[/Keyboard/space]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 521668666}
+        m_TargetAssemblyTypeName: PlayerScript, Assembly-CSharp
+        m_MethodName: Spell3
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2776c80d-3c14-4091-8c56-d04ced07a2b0
     m_ActionName: 'Player/Previous[/Keyboard/1]'
   - m_PersistentCalls:

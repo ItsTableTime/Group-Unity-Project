@@ -12,6 +12,7 @@ public class EnemyMoveScript : MonoBehaviour
     public float EnemySight;
     public GameObject Player;
     public float EnemyHealth;
+    public float KnockbackResistance;
     Rigidbody2D EnemyRigidBody;
     public GateScript LinkedGate;
 
@@ -85,14 +86,19 @@ public class EnemyMoveScript : MonoBehaviour
         if (other.tag == "BasicAttack")
         {
             EnemyHealth -= 20;
-            transform.position = transform.position + new Vector3(-0.5f*Facing, 0, 0);
+            transform.position = transform.position + new Vector3(-0.5f*Facing/KnockbackResistance, 0, 0);
             Destroy(other.gameObject);
-
         }
         if (other.tag == "SpikeAttack")
         {
             EnemyHealth -= 40;
-            EnemyRigidBody.AddForce(transform.up * 500, ForceMode2D.Impulse);
+            EnemyRigidBody.AddForce(transform.up * 500 / KnockbackResistance, ForceMode2D.Impulse);
+        }
+        if (other.tag == "SlamAttack")
+        {
+            EnemyHealth -= 60;
+            EnemyRigidBody.AddForce(transform.up * 500 / KnockbackResistance, ForceMode2D.Impulse);
+            transform.position = transform.position + new Vector3(-1.5f * Facing / KnockbackResistance, 0, 0);
         }
     }
 }

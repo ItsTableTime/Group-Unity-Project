@@ -46,6 +46,14 @@ public class PlayerScript : MonoBehaviour
     public GameObject SpikeAttackProjectile;
     GameObject SummonedSpikeAttack;
     public float SpikeCooldown;
+
+    public GameObject WaterGunAttackProjectile;
+    GameObject SummonedWaterGunAttack;
+    public float WaterGunCooldown;
+
+    public GameObject SlamAttackProjectile;
+    GameObject SummonedSlamAttack;
+    public float SlamCooldown;
     void Start()
     {
         PlayerRigidbody = GetComponent<Rigidbody2D>();
@@ -94,6 +102,14 @@ public class PlayerScript : MonoBehaviour
         if (SpikeCooldown > 0)
         {
             SpikeCooldown -= 1 * Time.deltaTime;
+        }
+        if (WaterGunCooldown > 0)
+        {
+            WaterGunCooldown -= 1 * Time.deltaTime;
+        }
+        if (SlamCooldown > 0)
+        {
+            SlamCooldown -= 1 * Time.deltaTime;
         }
     }
 
@@ -171,12 +187,19 @@ public class PlayerScript : MonoBehaviour
     }
     public void Spell1()
     {
-        if ((SpikeCooldown <= 0) &(SpellSlot1 == "EarthSpike") & (GlobalCooldown <= 0))
+        if ((SpikeCooldown <= 0) & (SpellSlot1 == "EarthSpike") & (GlobalCooldown <= 0))
         {
-            SummonedSpikeAttack = Instantiate(SpikeAttackProjectile, (transform.position + new Vector3(1.5f*PlayerDirection, -1.5f)), transform.rotation);
+            SummonedSpikeAttack = Instantiate(SpikeAttackProjectile, (transform.position + new Vector3(1.5f * PlayerDirection, -1.5f)), transform.rotation);
             GlobalCooldown = 0.5f;
-            SpikeCooldown = 3;
+            SpikeCooldown = 5;
 
+        }
+        if ((WaterGunCooldown <= 0) & (SpellSlot1 == "WaterGun") & (GlobalCooldown <= 0))
+        {
+            SummonedWaterGunAttack = Instantiate(WaterGunAttackProjectile, transform.position, transform.rotation);
+            SummonedWaterGunAttack.GetComponent<AttackMovementScript>().AttackDirection = PlayerDirection;
+            GlobalCooldown = 0.5f;
+            WaterGunCooldown = 3;
         }
 
     }
@@ -200,6 +223,17 @@ public class PlayerScript : MonoBehaviour
             WarpCooldown = 5;
             GlobalCooldown = 0.2f;
         }
+    }
+    public void Spell3()
+    {
+        if ((SlamCooldown <= 0) & (SpellSlot3 == "RockSlam") & (GlobalCooldown <= 0))
+        {
+            SummonedSlamAttack = Instantiate(SlamAttackProjectile, (transform.position + new Vector3(1.5f * PlayerDirection, -1f)), transform.rotation);
+            GlobalCooldown = 0.5f;
+            SlamCooldown = 15;
+
+        }
+
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
