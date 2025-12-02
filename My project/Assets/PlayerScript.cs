@@ -30,27 +30,23 @@ public class PlayerScript : MonoBehaviour
     CollectableScript CollectableInfo;
     GameObject CollectableObject;
     GameObject SummonedCollectable;
-
+    bool TouchingWall = false;
+    bool TouchingGround = true;
     public float DashLength;
     public float DashSpeed;
     public float DashCooldown;
     float DashTime;
-
     bool AllowBonusJump;
     public float BonusJumpHeight;
-
     public float WarpLength;
     public float WarpCooldown;
     float WarpAmount;
-
     public GameObject SpikeAttackProjectile;
     GameObject SummonedSpikeAttack;
     public float SpikeCooldown;
-
     public GameObject WaterGunAttackProjectile;
     GameObject SummonedWaterGunAttack;
     public float WaterGunCooldown;
-
     public GameObject SlamAttackProjectile;
     GameObject SummonedSlamAttack;
     public float SlamCooldown;
@@ -63,7 +59,7 @@ public class PlayerScript : MonoBehaviour
     {
         PlayerTransform = transform.position;
         Vector2 temp = PlayerRigidbody.linearVelocity;
-        temp.x = (HorizontalMovement * Speed * (1+DashSpeed*DashTime));
+        temp.x = (HorizontalMovement * Speed * (1 + DashSpeed * DashTime));
         PlayerRigidbody.linearVelocity = (temp.x * transform.right) + (temp.y * transform.up);
         Immunity -= 1 * Time.deltaTime;
         if (Health <= 0)
@@ -112,11 +108,9 @@ public class PlayerScript : MonoBehaviour
             SlamCooldown -= 1 * Time.deltaTime;
         }
     }
-
     public void Move(InputAction.CallbackContext context)
     {
         Vector2 InputAxis = context.ReadValue<Vector2>();
-
         HorizontalMovement = InputAxis.x;
         if (InputAxis.x != 0)
         {
@@ -140,9 +134,7 @@ public class PlayerScript : MonoBehaviour
             SummonedAttack = Instantiate(AttackProjectile, transform.position, transform.rotation);
             SummonedAttack.GetComponent<AttackMovementScript>().AttackDirection = PlayerDirection;
             GlobalCooldown = 0.2f;
-
         }
-
     }
     public void Pickup()
     {
@@ -201,7 +193,6 @@ public class PlayerScript : MonoBehaviour
             GlobalCooldown = 0.5f;
             WaterGunCooldown = 3;
         }
-
     }
     public void Spell2()
     {
@@ -241,6 +232,11 @@ public class PlayerScript : MonoBehaviour
         {
             AllowJump = true;
             AllowBonusJump = true;
+            TouchingGround = true;
+        }
+        if (collision.gameObject.tag == "Wall")
+        {
+            TouchingWall = true;
         }
         if (collision.gameObject.tag == "DamagePart")
         {
@@ -248,6 +244,14 @@ public class PlayerScript : MonoBehaviour
             {
                 Health -= 1;
                 PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
+                Immunity = 1;
+            }
+        }
+        if (collision.gameObject.tag == "BoostPad")
+        {
+            if (Immunity <= 0)
+            {
+                PlayerRigidbody.AddForce(transform.up * 3 * JumpHeight, ForceMode2D.Impulse);
                 Immunity = 1;
             }
         }
@@ -263,6 +267,17 @@ public class PlayerScript : MonoBehaviour
         }
 
     }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            TouchingGround = false;
+        }
+        if (collision.gameObject.tag == "Wall")
+        {
+            TouchingWall = false;
+        }
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Collectable")
@@ -270,7 +285,6 @@ public class PlayerScript : MonoBehaviour
                 CanPickup = true;
                 CollectableInfo = other.gameObject.GetComponent<CollectableScript>();
                 CollectableObject = other.gameObject;
-
         }
     }
     private void OnTriggerExit2D(Collider2D other)

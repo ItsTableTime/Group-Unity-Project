@@ -1,18 +1,22 @@
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyMoveScript : MonoBehaviour
 {
     public float EnemySpeed;
-    public float Facing = 1;
+    float Facing = 1;
     float TurnCooldown = 0;
-    public bool EnemyAi = false;
+    bool EnemyAi = true;
     public float EnemyRange = 0;
     public float AggressiveRange = 0;
     public float EnemySight;
     public GameObject Player;
     public float EnemyHealth;
+    public int JumpRate;
     float KnockbackTime;
+    int JumpChance;
+    public float JumpCooldown;
     public float KnockbackResistance;
     Rigidbody2D EnemyRigidBody;
     public GateScript LinkedGate;
@@ -32,7 +36,23 @@ public class EnemyMoveScript : MonoBehaviour
         transform.position = transform.position + new Vector3(Facing * EnemySpeed * Time.deltaTime, 0, 0);
         TurnCooldown -= 1 * Time.deltaTime;
         EnemySight = Vector2.Distance(transform.position, Player.transform.position);
-        if (KnockbackTime > 0)
+        if (JumpCooldown <= 0)
+        {
+            if (JumpRate > 0)
+            {
+                JumpChance = RandomNumberGenerator.GetInt32(1, JumpRate);
+                if (JumpChance == 1)
+                {
+                    EnemyRigidBody.AddForce(transform.up * 350 / KnockbackResistance, ForceMode2D.Impulse);
+                    JumpCooldown = 3;
+                }
+            }
+        }
+        else
+        {
+            JumpCooldown -= 1 * Time.deltaTime;
+        }
+            if (KnockbackTime > 0)
         {
             transform.position = transform.position + new Vector3(-10 * Facing / KnockbackResistance * Time.deltaTime, 0, 0);
             KnockbackTime -= 1 * Time.deltaTime;
@@ -105,6 +125,23 @@ public class EnemyMoveScript : MonoBehaviour
             EnemyHealth -= 60;
             EnemyRigidBody.AddForce(transform.up * 500 / KnockbackResistance, ForceMode2D.Impulse);
             KnockbackTime = 0.5f;
+        }
+        if (other.tag == "Wall")
+        {
+            if (TurnCooldown <= 0)
+            {
+                if (Facing == 1)
+                {
+                    Facing = -1;
+                    TurnCooldown = 1;
+                }
+                else
+                {
+                    Facing = 1;
+                    TurnCooldown = 1;
+                }
+
+            }
         }
     }
 }
