@@ -251,7 +251,7 @@ public class PlayerScript : MonoBehaviour
         {
             if (Immunity <= 0)
             {
-                PlayerRigidbody.AddForce(transform.up * 3 * JumpHeight, ForceMode2D.Impulse);
+                PlayerRigidbody.AddForce(transform.up * 3 * dJumpHeight, ForceMode2D.Impulse);
                 Immunity = 1;
             }
         }

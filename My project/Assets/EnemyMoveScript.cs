@@ -103,8 +103,8 @@ public class EnemyMoveScript : MonoBehaviour
                     Facing = 1;
                     TurnCooldown = 1;
                 }
-            }
 
+            }
         }
     }
     private void OnTriggerEnter2D(Collider2D other)
@@ -112,7 +112,7 @@ public class EnemyMoveScript : MonoBehaviour
         if (other.tag == "BasicAttack")
         {
             EnemyHealth -= 20;
-            KnockbackTime = 0.1f;
+            KnockbackTime = 0.05f;
             Destroy(other.gameObject);
         }
         if (other.tag == "SpikeAttack")
