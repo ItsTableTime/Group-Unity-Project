@@ -124,7 +124,14 @@ public class PlayerScript : MonoBehaviour
         {
             PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
             AllowJump = false;
-            GlobalCooldown = 0.2f;
+            GlobalCooldown = 0.5f;
+        }
+        else if ((TouchingGround == true) & (GlobalCooldown <= 0))
+        {
+                PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
+                AllowJump = false;
+                GlobalCooldown = 0.5f;
+
         }
     }
     public void Attack()
@@ -190,7 +197,7 @@ public class PlayerScript : MonoBehaviour
         {
             SummonedWaterGunAttack = Instantiate(WaterGunAttackProjectile, transform.position, transform.rotation);
             SummonedWaterGunAttack.GetComponent<AttackMovementScript>().AttackDirection = PlayerDirection;
-            GlobalCooldown = 0.5f;
+            GlobalCooldown = 0.2f;
             WaterGunCooldown = 3;
         }
     }
@@ -206,7 +213,13 @@ public class PlayerScript : MonoBehaviour
         {
             PlayerRigidbody.AddForce(transform.up * BonusJumpHeight, ForceMode2D.Impulse);
             AllowBonusJump = false;
-            GlobalCooldown = 0.2f;
+            GlobalCooldown = 0.5f;
+        }
+        else if ((TouchingGround == true) & (SpellSlot2 == "BonusJump") & (GlobalCooldown <= 0))
+        {
+            PlayerRigidbody.AddForce(transform.up * BonusJumpHeight, ForceMode2D.Impulse);
+            AllowBonusJump = false;
+            GlobalCooldown = 0.5f;
         }
         if ((WarpCooldown <= 0) & (SpellSlot2 == "WarpDash") & (GlobalCooldown <= 0))
         {
@@ -230,13 +243,12 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground")
         {
-            AllowJump = true;
-            AllowBonusJump = true;
+            if (GlobalCooldown <= 0)
+            {
+                AllowJump = true;
+                AllowBonusJump = true;
+            }
             TouchingGround = true;
-        }
-        if (collision.gameObject.tag == "Wall")
-        {
-            TouchingWall = true;
         }
         if (collision.gameObject.tag == "DamagePart")
         {
@@ -251,7 +263,7 @@ public class PlayerScript : MonoBehaviour
         {
             if (Immunity <= 0)
             {
-                PlayerRigidbody.AddForce(transform.up * 3 * dJumpHeight, ForceMode2D.Impulse);
+                PlayerRigidbody.AddForce(transform.up * 3 * JumpHeight, ForceMode2D.Impulse);
                 Immunity = 1;
             }
         }
@@ -282,13 +294,29 @@ public class PlayerScript : MonoBehaviour
     {
         if (other.tag == "Collectable")
         {
-                CanPickup = true;
-                CollectableInfo = other.gameObject.GetComponent<CollectableScript>();
-                CollectableObject = other.gameObject;
+            CanPickup = true;
+            CollectableInfo = other.gameObject.GetComponent<CollectableScript>();
+            CollectableObject = other.gameObject;
+        }
+        if (other.tag == "Ground")
+        {
+            if (GlobalCooldown <= 0)
+            {
+                AllowJump = true;
+                AllowBonusJump = true;
+            }
+            TouchingGround = true;
         }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
-            CanPickup = false;
+        if(other.tag == "Collectable")
+        {
+            CanPickup = true;
+        }
+        if (other.tag == "Ground")
+        {
+            TouchingGround = false;
+        }
     }
 }
