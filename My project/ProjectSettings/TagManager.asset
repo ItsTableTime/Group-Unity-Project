@@ -15,6 +15,7 @@ TagManager:
   - SlamAttack
   - BoostPad
   - MapPart
+  - DeathZone
   layers:
   - Default
   - TransparentFX

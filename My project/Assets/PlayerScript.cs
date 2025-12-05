@@ -307,6 +307,10 @@ public class PlayerScript : MonoBehaviour
             }
             TouchingGround = true;
         }
+        if (other.tag == "DeathZone")
+        {
+            Health = 0;
+        }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
