@@ -126,6 +126,12 @@ public class EnemyMoveScript : MonoBehaviour
             EnemyRigidBody.AddForce(transform.up * 500 / KnockbackResistance, ForceMode2D.Impulse);
             KnockbackTime = 0.5f;
         }
+        if (other.tag == "GaleBullet")
+        {
+            EnemyHealth -= 20;
+            EnemyRigidBody.AddForce(transform.up * 600 / KnockbackResistance, ForceMode2D.Impulse);
+            KnockbackTime = 1f;
+        }
         if (other.tag == "Wall")
         {
             if (TurnCooldown <= 0)
