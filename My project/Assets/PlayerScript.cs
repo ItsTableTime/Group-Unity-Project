@@ -1,7 +1,9 @@
 using System;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine.UIElements.Experimental;
 using UnityEngine.Windows;
 
@@ -24,6 +26,7 @@ public class PlayerScript : MonoBehaviour
     public string SpellSlot2;
     public string SpellSlot3;
     public float GlobalCooldown;
+    public Image GlobalBar;
     Vector2 PlayerTransform;
     bool CanPickup = false;
     float PickupCooldown = 0;
@@ -32,6 +35,8 @@ public class PlayerScript : MonoBehaviour
     GameObject SummonedCollectable;
     bool TouchingWall = false;
     bool TouchingGround = true;
+    public Image HealthBar;
+    public Image DashBar;
     public float DashLength;
     public float DashSpeed;
     public float DashCooldown;
@@ -41,15 +46,21 @@ public class PlayerScript : MonoBehaviour
     public float WarpLength;
     public float WarpCooldown;
     float WarpAmount;
+    public Image EarthSpikeBar;
     public GameObject SpikeAttackProjectile;
     GameObject SummonedSpikeAttack;
     public float SpikeCooldown;
     public GameObject WaterGunAttackProjectile;
     GameObject SummonedWaterGunAttack;
     public float WaterGunCooldown;
+    public Image RockSlamBar;
     public GameObject SlamAttackProjectile;
     GameObject SummonedSlamAttack;
     public float SlamCooldown;
+    public Image GaleBar;
+    public GameObject GaleProjectile;
+    GameObject GaleAttack;
+    public float GaleCooldown;
     void Start()
     {
         PlayerRigidbody = GetComponent<Rigidbody2D>();
@@ -62,6 +73,7 @@ public class PlayerScript : MonoBehaviour
         temp.x = (HorizontalMovement * Speed * (1 + DashSpeed * DashTime));
         PlayerRigidbody.linearVelocity = (temp.x * transform.right) + (temp.y * transform.up);
         Immunity -= 1 * Time.deltaTime;
+        HealthBar.fillAmount = ((float)Health / (float)MaxHealth);
         if (Health <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -82,10 +94,20 @@ public class PlayerScript : MonoBehaviour
         {
             DashTime = 0;
             DashCooldown -= 1 * Time.deltaTime;
+            DashBar.fillAmount = (0.33f * (float)DashCooldown);
+        }
+        else
+        {
+            DashBar.fillAmount = 0;
         }
         if (GlobalCooldown > 0)
         {
             GlobalCooldown -= 1 * Time.deltaTime;
+            GlobalBar.fillAmount = (float)GlobalCooldown;
+        }
+        else
+        {
+            GlobalBar.fillAmount = 0;
         }
         if (PickupCooldown > 0)
         {
@@ -98,6 +120,11 @@ public class PlayerScript : MonoBehaviour
         if (SpikeCooldown > 0)
         {
             SpikeCooldown -= 1 * Time.deltaTime;
+            EarthSpikeBar.fillAmount = (0.2f * (float)SpikeCooldown);
+        }
+        else
+        {
+            EarthSpikeBar.fillAmount = 0;
         }
         if (WaterGunCooldown > 0)
         {
@@ -106,6 +133,20 @@ public class PlayerScript : MonoBehaviour
         if (SlamCooldown > 0)
         {
             SlamCooldown -= 1 * Time.deltaTime;
+            RockSlamBar.fillAmount = (0.06f * (float)SlamCooldown);
+        }
+        else
+        {
+            RockSlamBar.fillAmount = 0;
+        }
+        if (GaleCooldown > 0)
+        {
+            GaleCooldown -= 1 * Time.deltaTime;
+            GaleBar.fillAmount = (0.1f * (float)GaleCooldown);
+        }
+        else
+        {
+            GaleBar.fillAmount = 0;
         }
     }
     public void Move(InputAction.CallbackContext context)
@@ -191,6 +232,7 @@ public class PlayerScript : MonoBehaviour
             SummonedSpikeAttack = Instantiate(SpikeAttackProjectile, (transform.position + new Vector3(1.5f * PlayerDirection, -1.5f)), transform.rotation);
             GlobalCooldown = 0.5f;
             SpikeCooldown = 5;
+            
 
         }
         if ((WaterGunCooldown <= 0) & (SpellSlot1 == "WaterGun") & (GlobalCooldown <= 0))
@@ -206,7 +248,7 @@ public class PlayerScript : MonoBehaviour
         if ((DashCooldown <= 0) & (SpellSlot2 == "Dash") & (GlobalCooldown <= 0))
         {
             DashTime = DashLength;
-            DashCooldown = 5;
+            DashCooldown = 3;
             GlobalCooldown = 0.2f;
         }
         if ((AllowBonusJump == true) & (SpellSlot2 == "BonusJump") & (GlobalCooldown <= 0))
@@ -235,7 +277,12 @@ public class PlayerScript : MonoBehaviour
             SummonedSlamAttack = Instantiate(SlamAttackProjectile, (transform.position + new Vector3(1.5f * PlayerDirection, -1f)), transform.rotation);
             GlobalCooldown = 0.5f;
             SlamCooldown = 15;
-
+        }
+        if ((GaleCooldown <= 0) & (SpellSlot3 == "Gale") & (GlobalCooldown <= 0))
+        {
+            GaleAttack = Instantiate(GaleProjectile, (transform.position + new Vector3(0, 0)), transform.rotation);
+            GlobalCooldown = 0.5f;
+            GaleCooldown = 10;
         }
 
     }
@@ -310,6 +357,10 @@ public class PlayerScript : MonoBehaviour
         if (other.tag == "DeathZone")
         {
             Health = 0;
+        }
+        if (other.tag == "CheckPoint")
+        {
+            
         }
     }
     private void OnTriggerExit2D(Collider2D other)

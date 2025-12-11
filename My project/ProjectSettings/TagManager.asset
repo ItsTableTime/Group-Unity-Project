@@ -16,6 +16,9 @@ TagManager:
   - BoostPad
   - MapPart
   - DeathZone
+  - HealthBar
+  - Checkpoint
+  - GaleBullet
   layers:
   - Default
   - TransparentFX
