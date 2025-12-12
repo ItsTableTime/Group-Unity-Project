@@ -19,6 +19,7 @@ TagManager:
   - HealthBar
   - Checkpoint
   - GaleBullet
+  - LevelClear
   layers:
   - Default
   - TransparentFX

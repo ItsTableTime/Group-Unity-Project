@@ -25,6 +25,7 @@ public class PlayerScript : MonoBehaviour
     public string SpellSlot1;
     public string SpellSlot2;
     public string SpellSlot3;
+    public bool BeatLevel = false;
     public float GlobalCooldown;
     public Image GlobalBar;
     Vector2 PlayerTransform;
@@ -74,14 +75,6 @@ public class PlayerScript : MonoBehaviour
         PlayerRigidbody.linearVelocity = (temp.x * transform.right) + (temp.y * transform.up);
         Immunity -= 1 * Time.deltaTime;
         HealthBar.fillAmount = ((float)Health / (float)MaxHealth);
-        if (Health <= 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-        if (transform.position.y < -30)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
         if (MaxHealth < Health)
         {
             Health = MaxHealth;
@@ -358,9 +351,9 @@ public class PlayerScript : MonoBehaviour
         {
             Health = 0;
         }
-        if (other.tag == "CheckPoint")
+        if (other.tag == "LevelClear")
         {
-            
+            BeatLevel = true;
         }
     }
     private void OnTriggerExit2D(Collider2D other)
