@@ -44,6 +44,7 @@ public class PlayerScript : MonoBehaviour
     float DashTime;
     bool AllowBonusJump;
     public float BonusJumpHeight;
+    public Image WarpDashBar;
     public float WarpLength;
     public float WarpCooldown;
     float WarpAmount;
@@ -51,6 +52,7 @@ public class PlayerScript : MonoBehaviour
     public GameObject SpikeAttackProjectile;
     GameObject SummonedSpikeAttack;
     public float SpikeCooldown;
+    public Image WaterGunBar;
     public GameObject WaterGunAttackProjectile;
     GameObject SummonedWaterGunAttack;
     public float WaterGunCooldown;
@@ -62,6 +64,10 @@ public class PlayerScript : MonoBehaviour
     public GameObject GaleProjectile;
     GameObject GaleAttack;
     public float GaleCooldown;
+    public Image FirePunchBar;
+    public GameObject FirePunchAttackProjectile;
+    GameObject SummonedFirePunchAttack;
+    public float FirePunchCooldown;
     void Start()
     {
         PlayerRigidbody = GetComponent<Rigidbody2D>();
@@ -96,7 +102,7 @@ public class PlayerScript : MonoBehaviour
         if (GlobalCooldown > 0)
         {
             GlobalCooldown -= 1 * Time.deltaTime;
-            GlobalBar.fillAmount = (float)GlobalCooldown;
+            GlobalBar.fillAmount = 2.5f * (float)GlobalCooldown;
         }
         else
         {
@@ -109,6 +115,11 @@ public class PlayerScript : MonoBehaviour
         if (WarpCooldown > 0)
         {
             WarpCooldown -= 1 * Time.deltaTime;
+            WarpDashBar.fillAmount = (0.2f * (float)WarpCooldown);
+        }
+        else
+        {
+            WarpDashBar.fillAmount = 0;
         }
         if (SpikeCooldown > 0)
         {
@@ -122,6 +133,11 @@ public class PlayerScript : MonoBehaviour
         if (WaterGunCooldown > 0)
         {
             WaterGunCooldown -= 1 * Time.deltaTime;
+            WaterGunBar.fillAmount = (0.33f * (float)WaterGunCooldown);
+        }
+        else
+        {
+            WaterGunBar.fillAmount = 0;
         }
         if (SlamCooldown > 0)
         {
@@ -141,6 +157,15 @@ public class PlayerScript : MonoBehaviour
         {
             GaleBar.fillAmount = 0;
         }
+        if (FirePunchCooldown > 0)
+        {
+            FirePunchCooldown -= 1 * Time.deltaTime;
+            FirePunchBar.fillAmount = (1f * (float)FirePunchCooldown);
+        }
+        else
+        {
+            FirePunchBar.fillAmount = 0;
+        }
     }
     public void Move(InputAction.CallbackContext context)
     {
@@ -158,13 +183,13 @@ public class PlayerScript : MonoBehaviour
         {
             PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
             AllowJump = false;
-            GlobalCooldown = 0.5f;
+            GlobalCooldown = 0.4f;
         }
         else if ((TouchingGround == true) & (GlobalCooldown <= 0))
         {
                 PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
                 AllowJump = false;
-                GlobalCooldown = 0.5f;
+                GlobalCooldown = 0.4f;
 
         }
     }
@@ -223,9 +248,9 @@ public class PlayerScript : MonoBehaviour
         if ((SpikeCooldown <= 0) & (SpellSlot1 == "EarthSpike") & (GlobalCooldown <= 0))
         {
             SummonedSpikeAttack = Instantiate(SpikeAttackProjectile, (transform.position + new Vector3(1.5f * PlayerDirection, -1.5f)), transform.rotation);
-            GlobalCooldown = 0.5f;
+            GlobalCooldown = 0.2f;
             SpikeCooldown = 5;
-            
+
 
         }
         if ((WaterGunCooldown <= 0) & (SpellSlot1 == "WaterGun") & (GlobalCooldown <= 0))
@@ -235,6 +260,13 @@ public class PlayerScript : MonoBehaviour
             GlobalCooldown = 0.2f;
             WaterGunCooldown = 3;
         }
+        if ((FirePunchCooldown <= 0) & (SpellSlot1 == "FirePunch") & (GlobalCooldown <= 0))
+        {
+            SummonedFirePunchAttack = Instantiate(FirePunchAttackProjectile, transform.position, transform.rotation);
+            SummonedFirePunchAttack.GetComponent<AttackMovementScript>().AttackDirection = PlayerDirection;
+            GlobalCooldown = 0.2f;
+            FirePunchCooldown = 1;
+        }
     }
     public void Spell2()
     {
@@ -242,25 +274,25 @@ public class PlayerScript : MonoBehaviour
         {
             DashTime = DashLength;
             DashCooldown = 3;
-            GlobalCooldown = 0.2f;
+            GlobalCooldown = 0.4f;
         }
         if ((AllowBonusJump == true) & (SpellSlot2 == "BonusJump") & (GlobalCooldown <= 0))
         {
             PlayerRigidbody.AddForce(transform.up * BonusJumpHeight, ForceMode2D.Impulse);
             AllowBonusJump = false;
-            GlobalCooldown = 0.5f;
+            GlobalCooldown = 0.4f;
         }
         else if ((TouchingGround == true) & (SpellSlot2 == "BonusJump") & (GlobalCooldown <= 0))
         {
             PlayerRigidbody.AddForce(transform.up * BonusJumpHeight, ForceMode2D.Impulse);
             AllowBonusJump = false;
-            GlobalCooldown = 0.5f;
+            GlobalCooldown = 0.4f;
         }
         if ((WarpCooldown <= 0) & (SpellSlot2 == "WarpDash") & (GlobalCooldown <= 0))
         {
             transform.position = PlayerTransform + new Vector2(WarpAmount, 0);
             WarpCooldown = 5;
-            GlobalCooldown = 0.2f;
+            GlobalCooldown = 0.4f;
         }
     }
     public void Spell3()
@@ -268,13 +300,13 @@ public class PlayerScript : MonoBehaviour
         if ((SlamCooldown <= 0) & (SpellSlot3 == "RockSlam") & (GlobalCooldown <= 0))
         {
             SummonedSlamAttack = Instantiate(SlamAttackProjectile, (transform.position + new Vector3(1.5f * PlayerDirection, -1f)), transform.rotation);
-            GlobalCooldown = 0.5f;
+            GlobalCooldown = 0.2f;
             SlamCooldown = 15;
         }
         if ((GaleCooldown <= 0) & (SpellSlot3 == "Gale") & (GlobalCooldown <= 0))
         {
             GaleAttack = Instantiate(GaleProjectile, (transform.position + new Vector3(0, 0)), transform.rotation);
-            GlobalCooldown = 0.5f;
+            GlobalCooldown = 0.2f;
             GaleCooldown = 10;
         }
 
@@ -314,7 +346,6 @@ public class PlayerScript : MonoBehaviour
                 Health -= 1;
                 PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
                 Immunity = 1;
-
             }
         }
 

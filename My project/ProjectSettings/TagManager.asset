@@ -20,6 +20,7 @@ TagManager:
   - Checkpoint
   - GaleBullet
   - LevelClear
+  - FirePunchAttack
   layers:
   - Default
   - TransparentFX

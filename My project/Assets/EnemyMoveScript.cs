@@ -20,6 +20,7 @@ public class EnemyMoveScript : MonoBehaviour
     public float KnockbackResistance;
     Rigidbody2D EnemyRigidBody;
     public GateScript LinkedGate;
+    public bool MiniBoss;
 
     void Start()
     {
@@ -52,9 +53,9 @@ public class EnemyMoveScript : MonoBehaviour
         {
             JumpCooldown -= 1 * Time.deltaTime;
         }
-            if (KnockbackTime > 0)
+        if (KnockbackTime > 0)
         {
-            transform.position = transform.position + new Vector3(-10 * Facing / KnockbackResistance * Time.deltaTime, 0, 0);
+            transform.position = transform.position + new Vector3(-20 * Facing / KnockbackResistance * Time.deltaTime, 0, 0);
             KnockbackTime -= 1 * Time.deltaTime;
         }
         if ((EnemyAi == true) && (EnemySight < EnemyRange))
@@ -112,25 +113,52 @@ public class EnemyMoveScript : MonoBehaviour
         if (other.tag == "BasicAttack")
         {
             EnemyHealth -= 20;
-            KnockbackTime = 0.05f;
+            KnockbackTime = 0.025f;
             Destroy(other.gameObject);
+            if (MiniBoss == true)
+            {
+                EnemySpeed += 0.02f;
+            }
         }
         if (other.tag == "SpikeAttack")
         {
             EnemyHealth -= 40;
             EnemyRigidBody.AddForce(transform.up * 500 / KnockbackResistance, ForceMode2D.Impulse);
+            KnockbackTime = 0.025f;
+            if (MiniBoss == true)
+            {
+                EnemySpeed += 0.04f;
+            }
         }
         if (other.tag == "SlamAttack")
         {
             EnemyHealth -= 60;
             EnemyRigidBody.AddForce(transform.up * 500 / KnockbackResistance, ForceMode2D.Impulse);
-            KnockbackTime = 0.5f;
+            KnockbackTime = 0.25f;
+            if (MiniBoss == true)
+            {
+                EnemySpeed += 0.06f;
+            }
         }
         if (other.tag == "GaleBullet")
         {
             EnemyHealth -= 20;
             EnemyRigidBody.AddForce(transform.up * 600 / KnockbackResistance, ForceMode2D.Impulse);
-            KnockbackTime = 1f;
+            KnockbackTime = 0.5f;
+            if (MiniBoss == true)
+            {
+                EnemySpeed += 0.02f;
+            }
+        }
+        if (other.tag == "FirePunchAttack")
+        {
+            EnemyHealth -= 30;
+            KnockbackTime = 0.0375f;
+            Destroy(other.gameObject);
+            if (MiniBoss == true)
+            {
+                EnemySpeed += 0.03f;
+            }
         }
         if (other.tag == "Wall")
         {
