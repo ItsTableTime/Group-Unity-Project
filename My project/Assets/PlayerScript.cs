@@ -68,6 +68,8 @@ public class PlayerScript : MonoBehaviour
     public GameObject FirePunchAttackProjectile;
     GameObject SummonedFirePunchAttack;
     public float FirePunchCooldown;
+    public Image MendBar;
+    public float MendCooldown;
     void Start()
     {
         PlayerRigidbody = GetComponent<Rigidbody2D>();
@@ -165,6 +167,15 @@ public class PlayerScript : MonoBehaviour
         else
         {
             FirePunchBar.fillAmount = 0;
+        }
+        if (MendCooldown > 0)
+        {
+            MendCooldown -= 1 * Time.deltaTime;
+            MendBar.fillAmount = (0.008f * (float)MendCooldown);
+        }
+        else
+        {
+            MendBar.fillAmount = 0;
         }
     }
     public void Move(InputAction.CallbackContext context)
@@ -308,6 +319,15 @@ public class PlayerScript : MonoBehaviour
             GaleAttack = Instantiate(GaleProjectile, (transform.position + new Vector3(0, 0)), transform.rotation);
             GlobalCooldown = 0.2f;
             GaleCooldown = 10;
+        }
+        if ((MendCooldown <= 0) & (SpellSlot3 == "Mend") & (GlobalCooldown <= 0))
+        {
+            if (Health + 1 < MaxHealth)
+            {
+                Health += 1;
+                MaxHealth -= 1;
+                MendCooldown = 120;
+            }
         }
 
     }

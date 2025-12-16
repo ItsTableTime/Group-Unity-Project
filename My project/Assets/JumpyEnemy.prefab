@@ -175,9 +175,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0360eaaadee870946a422ba69d0aa966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemySpeed: 4
-  EnemyRange: 4
-  AggressiveRange: 20
+  EnemySpeed: 3.5
+  EnemyRange: 3.5
+  AggressiveRange: 17.5
   EnemySight: 0
   Player: {fileID: 0}
   EnemyHealth: 150
@@ -185,3 +185,4 @@ MonoBehaviour:
   JumpCooldown: 0
   KnockbackResistance: 1
   LinkedGate: {fileID: 0}
+  MiniBoss: 0

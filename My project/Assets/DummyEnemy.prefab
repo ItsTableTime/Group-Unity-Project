@@ -176,11 +176,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemySpeed: 0
-  EnemyRange: 0
-  AggressiveRange: 0
+  EnemyRange: 100
+  AggressiveRange: 100
   EnemySight: 0
   Player: {fileID: 0}
-  EnemyHealth: 100
+  EnemyHealth: 150
   JumpRate: 0
   JumpCooldown: 0
   KnockbackResistance: 1
