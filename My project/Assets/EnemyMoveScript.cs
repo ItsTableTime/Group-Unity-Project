@@ -45,7 +45,7 @@ public class EnemyMoveScript : MonoBehaviour
                 if (JumpChance == 1)
                 {
                     EnemyRigidBody.AddForce(transform.up * 350 / KnockbackResistance, ForceMode2D.Impulse);
-                    JumpCooldown = 3;
+                    JumpCooldown = 5;
                 }
             }
         }

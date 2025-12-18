@@ -348,7 +348,7 @@ public class PlayerScript : MonoBehaviour
             {
                 Health -= 1;
                 PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
-                Immunity = 1;
+                Immunity = 1.5f;
             }
         }
         if (collision.gameObject.tag == "BoostPad")
@@ -356,7 +356,7 @@ public class PlayerScript : MonoBehaviour
             if (Immunity <= 0)
             {
                 PlayerRigidbody.AddForce(transform.up * 3 * JumpHeight, ForceMode2D.Impulse);
-                Immunity = 1;
+                Immunity = 1.5f;
             }
         }
         if (collision.gameObject.tag == "Enemy")
@@ -365,7 +365,7 @@ public class PlayerScript : MonoBehaviour
             {
                 Health -= 1;
                 PlayerRigidbody.AddForce(transform.up * JumpHeight, ForceMode2D.Impulse);
-                Immunity = 1;
+                Immunity = 1.5f;
             }
         }
 

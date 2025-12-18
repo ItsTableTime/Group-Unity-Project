@@ -12,10 +12,6 @@ public class SaveDataScript : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(gameObject);
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
-        {
-            SceneManager.LoadScene(1);
-        }
     }
     void Update()
     {
